@@ -5,7 +5,7 @@ if (typeof window !== "undefined") {}
 
 class Repository
 {
-    public cache = { 1:{name: "Принять ванну"}, 2:{name: "Выпить чашечку кофе"} }
+    public cache = reactive({ 1:{name: "Принять ванну"}, 2:{name: "Выпить чашечку кофе"} })
 
     constructor (private tableName)
     {
@@ -58,6 +58,10 @@ class Item
     }
 }
 
+let repo = new Repository('tasks')
+setTimeout(() => {
+    repo.cache[2].name = "Пойти спать"
+}, 5000)
 
 
-export const tasks = new Entity(new Repository('tasks'), Item)
+export const tasks = new Entity(repo, Item)
