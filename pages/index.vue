@@ -11,12 +11,20 @@
 
 <script>
 import Task from "../components/Task.vue"
+import {tasks} from "../app/data"
+
+
 export default {
     data() {
         return {
-            todo: [ {name: "Принять ванну"}, {name: "Выпить чашечку кофе"} ]
+            todo: tasks.items
         }
     },
+
+    mounted () {
+        tasks.get()
+    },
+
     components: {
         Task
     }
