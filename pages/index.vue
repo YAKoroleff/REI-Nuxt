@@ -2,7 +2,9 @@
 .Todo
     .Todo-header
         h1 Дела:
-        button Новое дело
+        .NewTask
+            input.NewTask-name(v-model="newTaskName")
+            button.NewTask-save(@click="addTask") Новое дело
     hr
     .Todo-list
         Task.Todo-task(v-for="item in todo" :task="item")
@@ -17,12 +19,21 @@ import {tasks} from "../app/data"
 export default {
     data() {
         return {
+            newTaskName: '',
             todo: tasks.items
         }
     },
 
     mounted () {
         tasks.get()
+    },
+
+    methods:
+    {
+        addTask () {
+            tasks.create({name: this.newTaskName})
+            this.newTaskName = ''
+        }
     },
 
     components: {
@@ -37,4 +48,10 @@ export default {
     &-header
         display: flex
         justify-content: space-between
+.NewTask 
+    & > *
+        height: 100%
+        box-sizing: border-box
+
+    
 </style>

@@ -3,12 +3,19 @@
     .Task-name {{task.name}}
     .Task-controls
         button Изменить
-        button Удалить
+        button(@click="remove") Удалить
 </template>
 
 <script>
 export default {
-    props: ["task"]
+    props: ["task"],
+    methods:
+    {
+        remove ()
+        {
+            this.task.delete()
+        }
+    }
 }
 </script>
 

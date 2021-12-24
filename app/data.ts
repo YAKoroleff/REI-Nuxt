@@ -1,26 +1,65 @@
 import {reactive} from 'vue'
 
-//client only
-if (typeof window !== "undefined") {}
 
 class Repository
 {
-    public cache = reactive({ 1:{name: "Принять ванну"}, 2:{name: "Выпить чашечку кофе"} })
+    public cache:any = reactive({ 1:{name: "Принять ванну"}, 2:{name: "Выпить чашечку кофе"} })
+    private users: any = {}
 
     constructor (private tableName)
     {
-
+        //client only
+        if (typeof window !== "undefined") {
+            let JSONdata = localStorage.getItem(this.tableName)
+            this.cache = JSONdata ? JSON.parse(JSONdata) : {}
+        }
     }
 
-    init (entity)
+    init (entity, query)
     {
-        //load & cache data...
-        setTimeout (() => 
-        {
-            let keys = [1, 2]
-            keys.forEach(key => entity.addItem(key))
-        }, 2000)
+        let relevantKeys = []
+        for(let key in this.cache)
+            if (query(this.cache[key])) 
+            {
+                entity.addItem(key)
+                this.addUser(key, entity)
+            }
     }
+
+    create (dataForItem, entity)
+    {
+        let key = this.newKey()
+        this.cache[key] = dataForItem
+        this.save()
+        this.addUser(key, entity)
+        return key
+    }
+
+    delete (key)
+    {
+        this.users[key].forEach(user => user.removeItem(key))
+        delete this.users[key]
+        delete this.cache[key]
+        this.save()
+    }
+
+    save ()
+    {
+        let JSONdata = JSON.stringify(this.cache)
+        localStorage.setItem(this.tableName, JSONdata)
+    }
+
+    newKey ()
+    {
+        return '_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    addUser (key, entity)
+    {
+        Array.isArray(this.users[key]) ? this.users[key].push(entity) : this.users[key] = [entity]
+        console.log(this.users)
+    }
+
 }
 
 class Entity
@@ -31,24 +70,38 @@ class Entity
         
     }
 
-    get()
+    get(query = () => true)
     {
-        this.repository.init(this)
+        this.repository.init(this, query)
     }
+
+    create(dataForItem)
+    {
+        let key = this.repository.create(dataForItem, this)
+        return this.addItem(key)
+    }
+
 
     addItem(key)
     {
-        console.log(`add ${key}`)
         this.items[key] = new this.Item(this.repository, key)
+        return this.items[key]
+    }
+
+    removeItem (key)
+    {
+        delete this.items[key]
     }
 }
 
 class Item
 {
     public data:any
+    //#repository: any
 
     constructor (private repository, private key)
     {
+        //this.#repository = repository
         this.data = this.repository.cache[key]
     }
 
@@ -56,12 +109,18 @@ class Item
     {
         return this.data.name
     }
+
+    save()
+    {
+        this.repository.save()
+    }
+
+    delete()
+    {
+        this.repository.delete(this.key)
+    }
 }
 
-let repo = new Repository('tasks')
-setTimeout(() => {
-    repo.cache[2].name = "Пойти спать"
-}, 5000)
 
 
-export const tasks = new Entity(repo, Item)
+export const tasks = new Entity(new Repository('tasks'), Item)
