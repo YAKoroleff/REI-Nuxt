@@ -16,6 +16,11 @@ export default class Instance
         return this.data.name
     }
 
+    set name(val)
+    {
+        this.data.name = val
+    }
+
     save()
     {
         this.resource.save()
