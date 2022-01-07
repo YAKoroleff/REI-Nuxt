@@ -3,6 +3,7 @@ import Entity from './Entity'
 import Instance from './Instance'
 
 
+const repo = new Repository()
 
+export const tasks = new Entity(repo.resource("tasks"), Instance)
 
-export const tasks = new Entity(new Repository('tasks'), Instance)

@@ -1,12 +1,12 @@
+//import {reactive} from 'vue'
+
 export default class Instance
 {
     public data:any
-    //#repository: any
 
-    constructor (private repository, private key)
+    constructor (private resource,private key)
     {
-        //this.#repository = repository
-        this.data = this.repository.cache[key]
+        this.data = this.resource.cache[key]
     }
 
     //dependeces in a static
@@ -18,11 +18,13 @@ export default class Instance
 
     save()
     {
-        this.repository.save()
+        this.resource.save()
     }
 
     delete()
     {
-        this.repository.delete(this.key)
+        this.resource.delete(this.key)
     }
 }
+
+

@@ -1,32 +1,29 @@
 import {reactive} from 'vue'
 
-export default class Entity
+export default class Entity 
 {
     public items = reactive({})
-    constructor (private repository, private Item)
-    {
-        
-    }
+
+    constructor (private resource, private Instance) { }
 
     get(query = () => true)
     {
-        this.repository.init(this, query)
+        this.resource.get(this, query)
     }
 
-    create(dataForItem)
+    create(dataForInstance)
     {
-        let key = this.repository.create(dataForItem, this)
-        return this.addItem(key)
-    }
-
-
-    addItem(key)
-    {
-        this.items[key] = new this.Item(this.repository, key)
+        let key = this.resource.create(this, dataForInstance)
         return this.items[key]
     }
 
-    removeItem (key)
+    addInstance(key)
+    {
+        this.items[key] = new this.Instance(this.resource, key)
+        return this
+    }
+
+    removeInstance (key)
     {
         delete this.items[key]
     }
