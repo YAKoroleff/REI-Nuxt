@@ -17,7 +17,7 @@ export default {
     {
         remove ()
         {
-            this.task.delete()
+            this.tag.delete()
         }
     }
 }

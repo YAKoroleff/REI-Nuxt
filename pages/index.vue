@@ -24,7 +24,7 @@
 <script>
 import Task from "../components/Task.vue"
 import Tag from "../components/Tag.vue"
-import {tasks} from "../app/data"
+import {tasks, tags} from "../app/data"
 
 
 export default {
@@ -33,10 +33,7 @@ export default {
             newTaskName: '',
             newTagName: '',
             todo: tasks.items,
-            tags: [
-                {name: 'Домашие дела'},
-                {name: 'Работа'},
-            ]
+            tags: tags.items
         }
     },
 
@@ -51,6 +48,7 @@ export default {
             this.newTaskName = ''
         },
         addTag () {
+            tags.create({name: this.newTagName})
             this.newTagName = ''
         }
     },
