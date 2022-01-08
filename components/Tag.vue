@@ -1,16 +1,12 @@
 <template lang="pug">
-.Task 
-    .Task-name(v-if="!isEdit") {{task.name}}
-    input.Task-name(v-if="isEdit" v-model="task.name")
-    .Task-controls
-        button(v-if="!isEdit" @click="isEdit = true") Редактировать
-        button(v-if="isEdit" @click="save") Сохранить
+.Tag 
+    .Tag-name {{tag.name}} 
         button(@click="remove") Удалить
 </template>
 
 <script>
 export default {
-    props: ["task"],
+    props: ["tag"],
     data ()
     {
         return {
@@ -19,12 +15,6 @@ export default {
     },
     methods:
     {
-        save ()
-        {
-            this.task.save()
-            this.isEdit = false
-        },
-
         remove ()
         {
             this.task.delete()
@@ -34,11 +24,10 @@ export default {
 </script>
 
 <style lang="sass">
-.Task
+.Tag
     display: flex
     justify-content: space-between
     padding: 5px 0
     &-controls > button
        margin-left: 10px 
-
 </style>
