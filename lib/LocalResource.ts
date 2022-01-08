@@ -1,6 +1,6 @@
 import {reactive} from 'vue'
 
-class Resource
+export default class LocalResource
 {
     public cache = reactive({})
     //hotfix:Resource->Entity relation (1/3)
@@ -65,16 +65,6 @@ class Resource
         //hotfix:Resource->Entity relation (3/3)
         Array.isArray(this.users[key]) ? this.users[key].push(entity) : this.users[key] = [entity]
         entity.addInstance(key)
-    }
-
-}
-
-export default class Repository
-{
-
-    public resource(tableName)
-    {
-        return new Resource(tableName)
     }
 
 }

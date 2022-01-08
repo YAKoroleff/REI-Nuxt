@@ -1,9 +1,7 @@
-import Repository from './Repository'
-import Entity from './Entity'
-import Instance from './Instance'
+import LocalResource from '../lib/LocalResource'
+import Entity from '../lib/Entity'
+import Task from './Task'
 
 
-const repo = new Repository()
-
-export const tasks = new Entity(repo.resource("tasks"), Instance)
+export const tasks = new Entity(new LocalResource("tasks"), Task)
 
