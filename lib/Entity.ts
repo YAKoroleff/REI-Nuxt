@@ -1,17 +1,26 @@
 import {reactive} from 'vue'
 
-export default class Entity 
-{
-    public items = reactive({})
+interface InstanceCollection<Instance> {
+    [key: string | number]: Instance
+}
 
-    constructor (private resource, private Instance) { }
+export default class Entity<Instance>
+{
+    public items:InstanceCollection<Instance> = reactive({})
+
+    constructor (private resource, private CurrentInstance) { }
 
     get(query = () => true)
     {
         this.resource.get(this, query)
     }
 
-    create(dataForInstance)
+    find (key):Instance
+    {
+        return new this.CurrentInstance(this.resource, key)
+    }
+
+    create(dataForInstance):Instance
     {
         let key = this.resource.create(this, dataForInstance)
         return this.items[key]
@@ -19,7 +28,7 @@ export default class Entity
 
     addInstance(key)
     {
-        this.items[key] = new this.Instance(this.resource, key)
+        this.items[key] = new this.CurrentInstance(this.resource, key)
         return this
     }
 
